@@ -3,13 +3,16 @@ import { useState } from "react";
 import styles from "./index.module.css";
 
 export default function Home() {
+  //deklarasi variabel yang digunakan
   const [essaiInput, setEssaiInput] = useState("");
   const [essaiOutput, setEssaiOutput] = useState("");
   const [result, setResult] = useState();
 
+  //function submit dan fetch ke controller
   async function onSubmit(event) {
     event.preventDefault();
     try {
+      //request ke route /api/essai untuk mendapatkan data yang dibuat
       const response = await fetch("/api/essai", {
         method: "POST",
         headers: {
@@ -19,6 +22,7 @@ export default function Home() {
       });
 
       const data = await response.json();
+      // error handling jika response dari API error
       if (response.status !== 200) {
         throw (
           data.error ||
@@ -26,6 +30,7 @@ export default function Home() {
         );
       }
 
+      //set result
       setResult(data.result);
       setEssaiOutput("This Outline for topic " + essaiInput);
       setEssaiInput("");
@@ -59,7 +64,7 @@ export default function Home() {
           <input type="submit" value="Generate Outline" />
         </form>
         <div className={styles.result}>
-          <span>{essaiOutput}</span>
+          <span className={styles.HeadingOutput}>{essaiOutput}</span>
           <span className={styles.essaiResult}>{result}</span>
         </div>
       </main>

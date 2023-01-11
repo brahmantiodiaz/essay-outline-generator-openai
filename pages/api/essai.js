@@ -1,11 +1,11 @@
 import { Configuration, OpenAIApi } from "openai";
-
+//config untuk connect ke OPENAI
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-
 export default async function (req, res) {
+  //error handling jika API key salah
   if (!configuration.apiKey) {
     res.status(500).json({
       error: {
@@ -15,7 +15,7 @@ export default async function (req, res) {
     });
     return;
   }
-
+  // message jika Research topic tidak di isi
   const essai = req.body.essai || "";
   if (essai.trim().length === 0) {
     res.status(400).json({
@@ -27,10 +27,11 @@ export default async function (req, res) {
   }
 
   try {
+    //membuat Request pada https://api.openai.com/v1/completions
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: generatePrompt(essai),
-      temperature: 0.3,
+      temperature: 0.9,
       max_tokens: 1000,
       top_p: 1.0,
       frequency_penalty: 0.0,
